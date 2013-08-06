@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  conn.h
+ *       Filename:  connect.c
  *
  *    Description:  连接处理
  *
  *        Version:  1.0
- *        Created:  2013年08月06日 11时09分18秒
+ *        Created:  2013年08月06日 11时06分11秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,9 +16,9 @@
  * =====================================================================================
  */
 
-#ifndef CONN_H_
-#define CONN_H_
+#include <unistd.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-
-#endif 	// CONN_H_
+#include "connect.h"

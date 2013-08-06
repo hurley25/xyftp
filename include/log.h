@@ -21,8 +21,8 @@
 
 #include <syslog.h>
 
-// 处理输出信息
-void xyftp_print_info(int level, char *info);
+// 写入日志信息
+void xyftp_write_log(int level, char *info);
 
 #endif 	// LOG_H_
 
