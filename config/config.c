@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "error.h"
+#include "log.h"
 #include "config.h"
 
 #define BUF_SIZE 1024
@@ -49,7 +49,7 @@ bool xyftp_read_config()
 
 	// 简单处理下配置文件
 	if ((config_stream = fopen(config_file, "r")) == NULL) {
-		xyftp_print_info(LOG_ERR, ERR_SYSTEM);
+		xyftp_print_info(LOG_ERR, "Open The Config File Error!");
 		return false;
 	}
 	
@@ -92,7 +92,7 @@ bool xyftp_read_config()
 	fclose(config_stream);
 
 	if (config_global.ftp_path[0] == '\0') {
-		xyftp_print_info(LOG_ERR, ERR_CONFIG_FILE);
+		xyftp_print_info(LOG_ERR, "The Config File Format Error!");
 		return false;
 	}
 

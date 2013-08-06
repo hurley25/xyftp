@@ -20,23 +20,33 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 #include "log.h"
 
-// 写入日志信息
-void xyftp_write_log(int level, char *info)
+// 定义错误日志缓冲区大小
+#define ERR_BUFF 1024
+
+// 处理输出信息
+void xyftp_print_info(int level, char *output_info)
 {
-	switch (level) {
-	case LOG_INFO:
-		syslog(LOG_INFO, "log_info: %s", info);
-		break;
-	case LOG_WARNING:
-		syslog(LOG_WARNING, "log_info: %s", info);
-		break;
-	case LOG_ERR:
-		syslog(LOG_ERR, "log_info: %s", info);
-		break;
-	default: break;
+	char err_buff[ERR_BUFF];
+
+#ifndef FTP_DEBUG
+	if (errno == 0) {
+		syslog(level, "%s\n", output_info);
+	} else {
+		strerror_r(errno, err_buff, ERR_BUFF);
+		syslog(level, "%s - %s", output_info, err_buff);
 	}
+#else
+	if (errno == 0) {
+		fprintf(stderr, "Debug Info: %s\n", output_info);
+	} else {
+		strerror_r(errno, err_buff, ERR_BUFF);
+		fprintf(stderr, "Debug Info: %s - %s\n", output_info, err_buff);
+	}
+#endif	
 }
 
