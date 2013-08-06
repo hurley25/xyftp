@@ -19,7 +19,10 @@
 #ifndef LOG_H_
 #define LOG_H_
 
+#include <syslog.h>
 
+// 处理输出信息
+void xyftp_print_info(int level, char *info);
 
 #endif 	// LOG_H_
 

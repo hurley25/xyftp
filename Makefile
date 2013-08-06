@@ -14,7 +14,7 @@ C_OBJECTS = $(patsubst %.c, %.o, $(C_SOURCES))
 
 CC = gcc
 
-C_FLAGS = -c -Wall -Iinclude
+C_FLAGS = -D FTP_DEBUG -c -Wall -Iinclude -g
 
 all: $(C_OBJECTS) 
 	@echo 链接 ...

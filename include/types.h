@@ -1,9 +1,9 @@
 /*
  * =====================================================================================
  *
- *       Filename:  xyftp.h
+ *       Filename:  types.h
  *
- *    Description:  程序主头文件
+ *    Description:  一些类型的定义
  *
  *        Version:  1.0
  *        Created:  2013年08月06日 11时04分06秒
@@ -16,9 +16,13 @@
  * =====================================================================================
  */
 
-#ifndef XYFTP_H_
-#define XYFTP_H_
+#ifndef TYPES_H_
+#define TYPES_H_
 
+typedef
+enum _bool {
+	false = 0,
+	true = 1
+}bool;
 
-
-#endif 	// XYFTP_H_
+#endif 	// TYPES_H_

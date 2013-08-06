@@ -21,11 +21,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "xyftp.h"
+#include "config.h"
 
 int main(int argc, char *argv[])
 {
-
+	// 读取配置文件
+	if (xyftp_read_config() == false) {
+		exit(-1);
+	}
 
 	return EXIT_SUCCESS;
 }
