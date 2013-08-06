@@ -21,18 +21,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "connect.h"
 #include "runtime.h"
 #include "config.h"
 
 int main(int argc, char *argv[])
 {
 	// 读取配置文件
-	if (xyftp_read_config() == false) {
+	if (!xyftp_read_config()) {
 		exit(-1);
 	}
 
 	// 初始化服务器资源
-	if(xyftp_init() == false) {
+	if(!xyftp_init()) {
+		exit(-1);
+	}
+
+	// 进入网络连接处理的主循环
+	if (!xyftp_accept_client()) {
 		exit(-1);
 	}
 
