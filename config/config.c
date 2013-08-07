@@ -16,20 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "log.h"
-#include "config.h"
-
-#define BUF_SIZE 1024
-#define KEY_SIZE 50
+#include "xyftp.h"
 
 // 全局配置定义
 xyftp_config_t config_global;

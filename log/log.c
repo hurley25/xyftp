@@ -16,14 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-#include "log.h"
+#include "xyftp.h"
 
 // 定义错误日志缓冲区大小
 #define ERR_BUFF 1024

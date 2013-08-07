@@ -24,12 +24,6 @@ typedef enum _bool {
 	true = 1
 }bool;
 
-// 最大连接数
-#define MAX_CONNECT_SIZE 1024
-
-// 缓冲区尺寸
-#define BUFF_LENGTH 128
-
 // 定义服务器数据缓冲区类型
 typedef struct  xyftp_buffer {
 	char *buff;

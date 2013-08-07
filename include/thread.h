@@ -19,8 +19,6 @@
 #ifndef THREAD_H_
 #define THREAD_H_
 
-#include "types.h"
-
 // 获取一个线程处理客户连接
 bool xyftp_get_thread(void *arg);
 

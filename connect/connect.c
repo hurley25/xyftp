@@ -16,22 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <pthread.h>
-
-#include "log.h"
-#include "connect.h"
-#include "thread.h"
-
-#define SERV_PORT 9527
-#define LISTEN_SIZE 50
+#include "xyftp.h"
 
 // 服务器等待连接函数
 bool xyftp_accept_client()

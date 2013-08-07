@@ -19,21 +19,21 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include "types.h"
-
 #ifndef MAX_PATH
 #define MAX_PATH 4096
 #endif
 
+#define BUF_SIZE 1024
+#define KEY_SIZE 50
+
 // 全局配置定义
-typedef
-struct xyftp_config
+typedef struct xyftp_config
 {
-	char ftp_path[MAX_PATH];
-	bool anonymous_enable;
-	bool upload_enable;
-	bool download_enable;
-	bool log_enable;
+	char ftp_path[MAX_PATH]; 	// FTP 服务器默认目录
+	bool anonymous_enable; 	// 是否允许任意用户登录
+	bool upload_enable;		// 是否允许上传
+	bool download_enable;		// 是否允许下载
+	bool log_enable; 		// 是否记录日志
 }xyftp_config_t;
 
 // 全局配置声明

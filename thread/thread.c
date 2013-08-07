@@ -16,14 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-
-#include "ftp.h"
-#include "thread.h"
+#include "xyftp.h"
 
 // 创建一个具有脱离属性的线程
 static int xyftp_create_thread_detached(pthread_t *thread, void *(*thread_func) (void *), void *arg)

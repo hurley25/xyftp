@@ -19,8 +19,6 @@
 #ifndef CONNECT_H_
 #define CONNECT_H_
 
-#include "types.h"
-
 // 服务器等待连接函数
 bool xyftp_accept_client();
 

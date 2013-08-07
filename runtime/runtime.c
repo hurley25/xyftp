@@ -16,17 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-#include "config.h"
-#include "types.h"
-#include "log.h"
-#include "runtime.h"
+#include "xyftp.h"
 
 // 客户连接的数据缓冲区指针
 xyftp_buffer_t *conn_buff;
@@ -68,7 +58,7 @@ bool xyftp_init()
 		return false;
 	}
 #else
-	printf("\n-------------------- xyftp Server --------------------\n\n");
+	printf("\n-------------------- " SERVER_NAME " --------------------\n\n");
 	xyftp_print_time();
 	printf(" Started\n\nWaiting ...\n");
 #endif

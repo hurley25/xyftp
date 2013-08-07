@@ -16,14 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "connect.h"
-#include "runtime.h"
-#include "config.h"
+#include "xyftp.h"
 
 int main(int argc, char *argv[])
 {

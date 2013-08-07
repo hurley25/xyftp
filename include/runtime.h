@@ -19,8 +19,6 @@
 #ifndef RUNTIME_H_
 #define RUNTIME_H_
 
-#include "types.h"
-
 // 声明客户连接的数据缓冲区指针
 extern xyftp_buffer_t *conn_buff;
 

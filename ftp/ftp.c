@@ -16,13 +16,7 @@
  * =====================================================================================
  */
 
-#include <unistd.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "ftp.h"
+#include "xyftp.h"
 
 // 客户处理线程的入口函数
 void *xyftp_thread_entry(void *arg)
