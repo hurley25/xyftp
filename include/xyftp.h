@@ -38,8 +38,9 @@
 
 #include "types.h"
 #include "connect.h"
-#include "runtime.h"
 #include "thread.h"
+#include "thread_pool.h"
+#include "runtime.h"
 #include "config.h"
 #include "log.h"
 #include "ftp.h"
@@ -53,11 +54,14 @@
 // 服务器最大连接数
 #define MAX_CONNECT_SIZE 1024
 
+// 服务端最大支持用户数(线程池大小)
+#define MAX_CONNECT_USER 10
+
 // listen() 的 backlog 队列长度
-#define LISTEN_SIZE 50
+#define LISTEN_SIZE 20
 
 // 接收缓冲区默认尺寸
-#define BUFF_LENGTH 128
+#define BUFF_LENGTH 1024
 
 #endif 	// XYFTP_H_
 

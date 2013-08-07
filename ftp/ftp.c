@@ -19,7 +19,7 @@
 #include "xyftp.h"
 
 // 客户处理线程的入口函数
-void *xyftp_thread_entry(void *arg)
+void *xyftp_thread_job_entry(void *arg)
 { 	
 	int conn_fd = (int)arg;
 	int pipe_fd[2];

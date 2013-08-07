@@ -65,9 +65,9 @@ bool xyftp_accept_client()
 		sprintf(info_buf, "New Connection Create. Client IP : %s\n", inet_ntoa(client_addr.sin_addr));
 		xyftp_print_info(LOG_INFO, info_buf);
 
-		// 传值，注意在线程函数内部读取值
-		if (!xyftp_get_thread((void *)accept_fd)) {
-			xyftp_print_info(LOG_ERR, "Get Thread Error!");
+		// 传值，注意在线程函数内部读取参数值，而非解引用
+		if (thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd) == -1) {
+			xyftp_print_info(LOG_ERR, "Add Thread Pool Job Error!");
 		}
 	}
 }

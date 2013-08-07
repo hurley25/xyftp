@@ -18,6 +18,8 @@
 
 #include "xyftp.h"
 
+// 线程池实现后，这里的线程处理函数不再使用，作为历史版本保留在项目中
+
 // 创建一个具有脱离属性的线程
 static int xyftp_create_thread_detached(pthread_t *thread, void *(*thread_func) (void *), void *arg)
 {
@@ -45,7 +47,7 @@ bool xyftp_get_thread(void *arg)
 {
 	pthread_t thread;
 
-	if (xyftp_create_thread_detached(&thread, xyftp_thread_entry, arg) == -1) {
+	if (xyftp_create_thread_detached(&thread, xyftp_thread_job_entry, arg) == -1) {
 		return false;
 	}
 

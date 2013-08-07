@@ -19,28 +19,16 @@
 #include "xyftp.h"
 
 // 客户连接的数据缓冲区指针
-xyftp_buffer_t *conn_buff;
+xyftp_buffer_t *conn_buff_global;
+
+// 线程池指针
+thread_pool_t *thread_pool_global;
 
 // 为客户连接的数据缓冲区申请内存
-static bool xyftp_malloc_buff()
-{
-	conn_buff = (xyftp_buffer_t *)malloc(sizeof(xyftp_buffer_t) * MAX_CONNECT_SIZE);
-	if (conn_buff == NULL) {
-		return false;
-	}
+static bool xyftp_malloc_buff();
 
-	int i;
-	for (i = 0; i < MAX_CONNECT_SIZE; i++) {
-		conn_buff[i].buff = (char *)malloc(BUFF_LENGTH);
-		conn_buff[i].len = 0;
-		conn_buff[i].size = 0;
-		if (conn_buff[i].buff == NULL) {
-			return false;
-		}
-	}
-
-	return true;
-}
+// 为客户连接的数据缓冲区释放内存
+static bool xyftp_free_buff();
 
 // 初始化运行状态
 bool xyftp_init()
@@ -67,6 +55,57 @@ bool xyftp_init()
 		xyftp_print_info(LOG_ERR, "Alloc Buff Memery Error!");
 		return false;
 	}
+	
+	// 初始化线程池
+	if ((thread_pool_global = thread_pool_init(MAX_CONNECT_USER, MAX_CONNECT_USER)) == NULL) {
+		xyftp_print_info(LOG_ERR, "Thread Pool Init Error!");
+		return false;
+	}
+
+	return true;
+}
+
+// 销毁服务器占据资源
+void xyftp_destroy()
+{
+	// 释放线程数据接收缓存
+	xyftp_free_buff();
+
+	// 释放线程池资源
+	thread_pool_destroy(thread_pool_global);
+}
+
+// 为客户连接的数据缓冲区申请内存
+static bool xyftp_malloc_buff()
+{
+	conn_buff_global = (xyftp_buffer_t *)malloc(sizeof(xyftp_buffer_t) * MAX_CONNECT_SIZE);
+	if (conn_buff_global == NULL) {
+		return false;
+	}
+
+	int i;
+	for (i = 0; i < MAX_CONNECT_SIZE; i++) {
+		conn_buff_global[i].buff = (char *)malloc(BUFF_LENGTH);
+		conn_buff_global[i].len = 0;
+		conn_buff_global[i].size = 0;
+		if (conn_buff_global[i].buff == NULL) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// 为客户连接的数据缓冲区释放内存
+static bool xyftp_free_buff()
+{
+	int i;
+	for (i = 0; i < MAX_CONNECT_SIZE; i++) {
+		if (conn_buff_global[i].buff != NULL) {
+			free(conn_buff_global[i].buff);
+		}
+	}
+	free(conn_buff_global);
 
 	return true;
 }

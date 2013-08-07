@@ -20,10 +20,16 @@
 #define RUNTIME_H_
 
 // 声明客户连接的数据缓冲区指针
-extern xyftp_buffer_t *conn_buff;
+extern xyftp_buffer_t *conn_buff_global;
+
+// 声明线程池指针
+extern thread_pool_t *thread_pool_global;
 
 // 初始化运行状态
 bool xyftp_init();
+
+// 清理服务器占据资源
+void xyftp_destroy();
 
 // 当前系统时间打印函数
 void xyftp_print_time();

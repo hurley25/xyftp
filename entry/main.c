@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
 		exit(-1);
 	}
 
+	// 释放资源并退出
+	xyftp_destroy();
+
 	return EXIT_SUCCESS;
 }
 
