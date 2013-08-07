@@ -34,11 +34,19 @@ void xyftp_print_info(int level, char *output_info)
 		syslog(level, "%s - %s", output_info, err_buff);
 	}
 #else
+	time_t 	  timep;
+	struct	  tm *p;
+	
+	time(&timep);
+	p = localtime(&timep);
+
 	if (errno == 0) {
-		fprintf(stderr, "Debug Info: %s\n", output_info);
+		fprintf(stderr, "%02d:%02d:%02d Debug Info: %s\n",
+				p->tm_hour, p->tm_min, p->tm_sec, output_info);
 	} else {
 		strerror_r(errno, err_buff, ERR_BUFF);
-		fprintf(stderr, "Debug Info: %s - %s\n", output_info, err_buff);
+		fprintf(stderr, "%02d:%02d:%02d Debug Info: %s - %s\n",
+				p->tm_hour, p->tm_min, p->tm_sec, output_info, err_buff);
 	}
 #endif	
 }

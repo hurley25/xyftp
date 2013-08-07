@@ -60,7 +60,7 @@ bool xyftp_init()
 #else
 	printf("\n-------------------- " SERVER_NAME " --------------------\n\n");
 	xyftp_print_time();
-	printf(" Started\n\nWaiting ...\n");
+	printf(" Started\n\nWaiting ...\n\n");
 #endif
 	// 为客户连接的数据缓冲区申请内存
 	if (!xyftp_malloc_buff()) {
@@ -80,6 +80,6 @@ void xyftp_print_time()
 	
 	time(&timep);
 	p = localtime(&timep);
-	printf("%02d/%02d/%02d ", 1900+p->tm_year, 1 + p->tm_mon, p->tm_mday);
+	printf("%02d/%02d/%02d ", 1900 + p->tm_year, 1 + p->tm_mon, p->tm_mday);
 	printf("%s %02d:%02d:%02d", wday[p->tm_wday], p->tm_hour, p->tm_min, p->tm_sec);
 }

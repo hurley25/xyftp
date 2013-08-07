@@ -19,13 +19,14 @@
 #ifndef XYFTP_H_
 #define XYFTP_H_
 
+#define _GNU_SOURCE
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <fcntl.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +34,7 @@
 #include <pthread.h>
 #include <errno.h>
 #include <syslog.h>
+#include <fcntl.h>
 
 #include "types.h"
 #include "connect.h"
