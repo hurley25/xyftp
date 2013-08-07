@@ -13,12 +13,13 @@ C_SOURCES = $(shell find . -name "*.c")
 C_OBJECTS = $(patsubst %.c, %.o, $(C_SOURCES))
 
 CC = gcc
-
-C_FLAGS = -D FTP_DEBUG -c -Wall -Iinclude -g
+C_FLAGS = -D FTP_DEBUG -c -Wall -Iinclude
+LINK_FLAGS = -lpthread
+PROGRAM = xyftp
 
 all: $(C_OBJECTS) 
 	@echo 链接 ...
-	$(CC) $(C_OBJECTS) -o xyftp
+	$(CC) $(C_OBJECTS) $(LINK_FLAGS) -o $(PROGRAM)
 
 # The automatic variable `$<' is just the first prerequisite
 # $@表示规则的当前目标文件名
@@ -29,5 +30,5 @@ all: $(C_OBJECTS)
 .PHONY:clean
 clean:
 	@echo 清理临时文件
-	$(RM) $(C_OBJECTS) xyftp
+	$(RM) $(C_OBJECTS) $(PROGRAM)
 

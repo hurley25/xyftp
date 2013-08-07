@@ -20,5 +20,42 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
+#include "ftp.h"
 #include "thread.h"
+
+// 创建一个具有脱离属性的线程
+static int xyftp_create_thread_detached(pthread_t *thread, void *(*thread_func) (void *), void *arg)
+{
+	pthread_attr_t thread_attr;
+			
+	if (pthread_attr_init(&thread_attr)) {
+		return -1;
+	}
+	
+	if (pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_DETACHED)) {
+		return -1;
+	}
+
+	if (pthread_create(thread, &thread_attr, thread_func, arg) == -1) {
+		return -1;
+	}
+
+	pthread_attr_destroy(&thread_attr);
+
+	return 0;
+}
+
+// 获取一个线程处理客户连接
+bool xyftp_get_thread(void *arg)
+{
+	pthread_t thread;
+
+	if (xyftp_create_thread_detached(&thread, xyftp_thread_entry, arg) == -1) {
+		return false;
+	}
+
+	return true;
+}
+

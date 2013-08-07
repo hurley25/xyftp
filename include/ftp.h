@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  thread.h
+ *       Filename:  ftp.h
  *
- *    Description:  线程相关
+ *    Description:  FTP 协议解析处理相关函数
  *
  *        Version:  1.0
- *        Created:  2013年08月06日 11时09分52秒
+ *        Created:  2013年08月07日 10时45分22秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,12 +16,10 @@
  * =====================================================================================
  */
 
-#ifndef THREAD_H_
-#define THREAD_H_
+#ifndef FTP_H_
+#define FTP_H_
 
-#include "types.h"
+// 客户处理线程的入口函数
+void *xyftp_thread_entry(void *arg);
 
-// 获取一个线程处理客户连接
-bool xyftp_get_thread(void *arg);
-
-#endif 	// THREAD_H_
+#endif 	// FTP_H_

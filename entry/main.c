@@ -27,11 +27,6 @@
 
 int main(int argc, char *argv[])
 {
-	// 读取配置文件
-	if (!xyftp_read_config()) {
-		exit(-1);
-	}
-
 	// 初始化服务器资源
 	if(!xyftp_init()) {
 		exit(-1);

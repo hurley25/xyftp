@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  runtime.h
+ *       Filename:  ftp.c
  *
- *    Description:  服务器运行时的一些函数
+ *    Description:  FTP 协议解析处理相关函数
  *
  *        Version:  1.0
- *        Created:  2013年08月06日 22时20分10秒
+ *        Created:  2013年08月07日 10时44分55秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,18 +16,20 @@
  * =====================================================================================
  */
 
-#ifndef RUNTIME_H_
-#define RUNTIME_H_
+#include <unistd.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "types.h"
+#include "ftp.h"
 
-// 声明客户连接的数据缓冲区指针
-extern xyftp_buffer_t *conn_buff;
+// 客户处理线程的入口函数
+void *xyftp_thread_entry(void *arg)
+{ 	
+	int conn_fd = (int)arg;
 
-// 初始化运行状态
-bool xyftp_init();
 
-// 当前系统时间打印函数
-void xyftp_print_time();
-
-#endif 	// RUNTIME_H_
+	
+	return NULL;
+}

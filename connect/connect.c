@@ -31,7 +31,7 @@
 #include "thread.h"
 
 #define SERV_PORT 9527
-#define LISTEN_SIZE 128
+#define LISTEN_SIZE 50
 
 // 服务器等待连接函数
 bool xyftp_accept_client()
@@ -74,6 +74,15 @@ bool xyftp_accept_client()
 		if (accept_fd < 0) {
 			xyftp_print_info(LOG_ERR, "Accept Socket Error!");
 			return false;
+		}
+
+		char info_buf[100];
+		sprintf(info_buf, "New Connection Create. Client IP : %s\n", inet_ntoa(client_addr.sin_addr));
+		xyftp_print_info(LOG_INFO, info_buf);
+
+		// 传值，注意在线程函数内部读取值
+		if (!xyftp_get_thread((void *)accept_fd)) {
+			xyftp_print_info(LOG_ERR, "Get Thread Error!");
 		}
 	}
 }
