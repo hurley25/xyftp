@@ -24,6 +24,8 @@ void *xyftp_thread_job_entry(void *arg)
 	int conn_fd = (int)arg;
 	int pipe_fd[2];
 
+	xyftp_print_info(LOG_INFO, "A Job Create!");
+
 	if (pipe(pipe_fd) == -1) {
 		xyftp_print_info(LOG_ERR, "Create Pipe Error!");
 		pthread_exit(0);
@@ -34,7 +36,7 @@ void *xyftp_thread_job_entry(void *arg)
 
 	close(conn_fd);
 
-	xyftp_print_info(LOG_INFO, "A Thread Exit!");
+	xyftp_print_info(LOG_INFO, "A Job Exit!");
 
 	return NULL;
 }

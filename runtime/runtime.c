@@ -57,7 +57,7 @@ bool xyftp_init()
 	}
 	
 	// 初始化线程池
-	if ((thread_pool_global = thread_pool_init(MAX_CONNECT_USER, MAX_CONNECT_USER)) == NULL) {
+	if ((thread_pool_global = thread_pool_init(1, 1)) == NULL) {
 		xyftp_print_info(LOG_ERR, "Thread Pool Init Error!");
 		return false;
 	}

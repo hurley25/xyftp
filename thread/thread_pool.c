@@ -29,7 +29,9 @@ thread_pool_t *thread_pool_init(int thread_num, int queue_max_num)
 			break;
 		}
 		thread_pool->thread_num = thread_num;
+		thread_pool->free_thread_num = thread_num;
 		thread_pool->queue_max_num = queue_max_num;
+		thread_pool->resize_now = 0;
 		thread_pool->queue_curr_num = 0;
 		thread_pool->head = thread_pool->tail = NULL;
 
@@ -118,14 +120,63 @@ int thread_pool_destroy(thread_pool_t *thread_pool)
 	return 0;
 }
 
+// 调整线程池大小
+// @return -1 参数错误
+// @return -2 申请内存错误
+// @return -3 线程创建错误
+int thread_pool_resize(thread_pool_t *thread_pool, int thread_num, int queue_max_num)
+{
+	// 不允许减小线程池规模
+	if (thread_num < thread_pool->thread_num || queue_max_num < thread_pool->queue_max_num) {
+		return -1;
+	}
+	pthread_mutex_lock(&(thread_pool->mutex));
+	thread_pool->queue_max_num = queue_max_num;
+	
+	thread_pool->threads = (pthread_t *)realloc(thread_pool->threads, sizeof(pthread_t) * thread_num);
+	if (thread_pool->threads == NULL) {
+		return -2;
+	}
+	int i;
+	for (i = thread_pool->thread_num; i < thread_num; i++) {
+		if (pthread_create(&(thread_pool->threads[i]), NULL, 
+						thread_function, (void *)thread_pool)) {
+			return -3;
+		}
+	}
+	thread_pool->free_thread_num += (thread_num - thread_pool->thread_num);
+	thread_pool->thread_num = thread_num;
+	thread_pool->resize_now = 1;
+	pthread_mutex_unlock(&(thread_pool->mutex));
+
+	return 0;
+}
+
 // 向线程池添加任务
+// @ return  0 表示正常
+// @ return  1 表示队列已满或所有线程忙碌
+// @ return -1 表示不可抗拒错误
 int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *), void *arg)
 {
 	pthread_mutex_lock(&(thread_pool->mutex));
-	// 队列满的时候等待
+	/*
+	// 队列满的时候
 	while ((thread_pool->queue_curr_num == thread_pool->queue_max_num) && 
 		!(thread_pool->queue_close || thread_pool->pool_close)) {
 		pthread_cond_wait(&(thread_pool->queue_not_full), &(thread_pool->mutex));
+	}*/
+
+	if ((thread_pool->queue_curr_num == thread_pool->queue_max_num) && 
+		!(thread_pool->queue_close || thread_pool->pool_close)) {
+		// 不可以阻塞在这里，否则主线程会阻塞，队列满了立即返回
+		pthread_mutex_unlock(&(thread_pool->mutex));
+		return 1;
+	}
+
+	// 所有线程都在忙的时候，不再添加任务
+	if (thread_pool->free_thread_num == 0) {
+		pthread_mutex_unlock(&(thread_pool->mutex));
+		return 1;
 	}
 
 	// 队列关闭或者线程池关闭则退出
@@ -151,6 +202,13 @@ int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *)
 	} else {
 		thread_pool->tail->next = new_job;
 		thread_pool->tail = new_job;
+	}
+
+	// 刚刚调整过线程池尺寸的话，要通知新创建后沉睡的家伙们起来干活了
+	if (thread_pool->resize_now == 1) {
+		thread_pool->resize_now = 0;
+		pthread_cond_broadcast(&(thread_pool->queue_not_empty));
+	
 	}
 	pthread_mutex_unlock(&(thread_pool->mutex));
 	
@@ -190,12 +248,23 @@ void *thread_function(void *arg)
 		if (thread_pool->queue_curr_num == thread_pool->queue_max_num - 1) {
 			pthread_cond_broadcast(&(thread_pool->queue_not_full));
 		}
+		thread_pool->free_thread_num--;
 		pthread_mutex_unlock(&(thread_pool->mutex));
-		
+
+#ifdef FTP_DEBUG
+		char info[100];
+		sprintf(info, "Thread %lu get a job", pthread_self());
+		xyftp_print_info(LOG_INFO, info);
+#endif
 		// 执行任务里面的函数
 		curr_job->job_callback(curr_job->arg);
 		free(curr_job);
 		curr_job = NULL;
+
+		pthread_mutex_lock(&(thread_pool->mutex));
+		thread_pool->free_thread_num++;
+		pthread_mutex_unlock(&(thread_pool->mutex));
+
 	}
 }
 
@@ -210,38 +279,37 @@ void *work(void *arg)
 
 int main(int argc, int argv)
 {
-	thread_pool_t *thread_pool = thread_pool_init(5, 10);
+	char *args[] = {
+		"1",  "2",  "3",  "4",  "5",
+		"6",  "7",  "8",  "9",  "10",
+		"11", "12", "13", "14", "15",
+		"16", "17", "18", "19", "20",
+		"21", "22", "23", "24", "25",
+		"26", "27", "28", "29", "30"};
 
-	thread_pool_add_job(thread_pool, work, "1");
-	thread_pool_add_job(thread_pool, work, "2");
-	thread_pool_add_job(thread_pool, work, "3");
-	thread_pool_add_job(thread_pool, work, "4");
-	thread_pool_add_job(thread_pool, work, "5");
-	thread_pool_add_job(thread_pool, work, "6");
-	thread_pool_add_job(thread_pool, work, "7");
-	thread_pool_add_job(thread_pool, work, "8");
-	thread_pool_add_job(thread_pool, work, "9");
-	thread_pool_add_job(thread_pool, work, "10");
-	thread_pool_add_job(thread_pool, work, "11");
-	thread_pool_add_job(thread_pool, work, "12");
-	thread_pool_add_job(thread_pool, work, "13");
-	thread_pool_add_job(thread_pool, work, "14");
-	thread_pool_add_job(thread_pool, work, "15");
-	thread_pool_add_job(thread_pool, work, "16");
-	thread_pool_add_job(thread_pool, work, "17");
-	thread_pool_add_job(thread_pool, work, "18");
-	thread_pool_add_job(thread_pool, work, "19");
-	thread_pool_add_job(thread_pool, work, "20");
-	thread_pool_add_job(thread_pool, work, "21");
-	thread_pool_add_job(thread_pool, work, "22");
-	thread_pool_add_job(thread_pool, work, "23");
-	thread_pool_add_job(thread_pool, work, "24");
-	thread_pool_add_job(thread_pool, work, "25");
-	thread_pool_add_job(thread_pool, work, "26");
-	thread_pool_add_job(thread_pool, work, "27");
-	thread_pool_add_job(thread_pool, work, "28");
-	thread_pool_add_job(thread_pool, work, "29");
-	thread_pool_add_job(thread_pool, work, "30");
+	thread_pool_t *thread_pool = thread_pool_init(1, 2);
+
+	int i = 0, tag, value;
+	for (i = 0; i < 30; i++) {
+		do {
+			tag = thread_pool_add_job(thread_pool, work, args[i]);
+			if (tag == 1) {
+				value = thread_pool_resize(thread_pool, 
+					thread_pool->thread_num * 2, thread_pool->queue_max_num * 2);
+				if (value == -1) {
+					printf("参数错误!\n");
+					exit(-1);
+				} else if (value == -2) {
+					printf("申请内存错误!\n");
+					exit(-1);
+				} else if (value == -3) {
+					printf("线程创建错误!\n");
+					exit(-1);
+				}
+			}
+		}while (tag != 0);
+	}
+
 
 	sleep(2);
 	thread_pool_destroy(thread_pool);

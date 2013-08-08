@@ -13,7 +13,7 @@ C_SOURCES = $(shell find . -name "*.c")
 C_OBJECTS = $(patsubst %.c, %.o, $(C_SOURCES))
 
 CC = gcc
-C_FLAGS = -D FTP_DEBUG -c -Wall -Iinclude
+C_FLAGS = -D FTP_DEBUG -c -Wall -Iinclude -g
 LINK_FLAGS = -lpthread
 PROGRAM = xyftp
 

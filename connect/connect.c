@@ -62,12 +62,29 @@ bool xyftp_accept_client()
 		}
 
 		char info_buf[100];
-		sprintf(info_buf, "New Connection Create. Client IP : %s\n", inet_ntoa(client_addr.sin_addr));
+		sprintf(info_buf, "New Connection Create. Client IP : %s", inet_ntoa(client_addr.sin_addr));
 		xyftp_print_info(LOG_INFO, info_buf);
 
 		// 传值，注意在线程函数内部读取参数值，而非解引用
-		if (thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd) == -1) {
-			xyftp_print_info(LOG_ERR, "Add Thread Pool Job Error!");
-		}
+		int tag, thread_pool_want;
+		do {
+			tag = thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd);
+			if (tag == 1) {
+				thread_pool_want = thread_pool_global->thread_num + THREAD_POOL_ADD_SIZE;
+				if (thread_pool_want <= MAX_CONNECT_USER) {
+					if (thread_pool_resize(thread_pool_global, thread_pool_want, thread_pool_want) != 0) {
+						xyftp_print_info(LOG_ERR, "Thread Pool Resize Error!");
+						break;
+					}
+					xyftp_print_info(LOG_INFO, "Thread Pool Resized Succeed!");
+				} else {
+					xyftp_print_info(LOG_ERR, "Too Many Client!");
+					break;
+				}
+			} else if (tag == -1) {
+				xyftp_print_info(LOG_ERR, "Add Thread Pool Job Error!");
+				return false;
+			}
+		} while (tag != 0);
 	}
 }

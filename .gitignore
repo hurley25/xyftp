@@ -17,4 +17,5 @@
 *.app
 
 .clang_complete
+tags
 xyftp

@@ -54,8 +54,14 @@
 // 服务器最大连接数
 #define MAX_CONNECT_SIZE 1024
 
-// 服务端最大支持用户数(线程池大小)
-#define MAX_CONNECT_USER 10
+// 服务端最大支持用户数
+#define MAX_CONNECT_USER 40
+
+// 默认线程池大小
+#define THREAD_POOL_SIZE 10
+
+// 线程池每次增加粒度
+#define THREAD_POOL_ADD_SIZE 10
 
 // listen() 的 backlog 队列长度
 #define LISTEN_SIZE 20

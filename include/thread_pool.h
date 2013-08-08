@@ -31,8 +31,10 @@ typedef struct job
 typedef struct thread_pool
 {
 	int thread_num; 		// 线程个数
+	int free_thread_num; 		// 空闲线程个数
 	int queue_max_num; 		// 最大任务个数
 	int queue_curr_num; 		// 当前任务个数
+	int resize_now; 		// 是否刚刚调整过尺寸
 	job_t *head; 			// 队列头指针
 	job_t *tail; 			// 队列尾指针
 	pthread_t *threads; 		// 所有线程的 pthread_t
@@ -46,6 +48,9 @@ typedef struct thread_pool
 
 // 初始化线程池
 thread_pool_t *thread_pool_init(int thread_num, int queue_max_num);
+
+// 调整线程池大小
+int thread_pool_resize(thread_pool_t *thread_pool, int thread_num, int queue_max_num);
 
 // 销毁线程池
 int thread_pool_destroy(thread_pool_t *thread_pool);
