@@ -56,7 +56,7 @@ int thread_pool_resize(thread_pool_t *thread_pool, int thread_num, int queue_max
 int thread_pool_destroy(thread_pool_t *thread_pool);
 
 // 向线程池添加任务
-int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *), void *arg);
+int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *), void *arg, int is_block);
 
 // 线程的处理函数
 void *thread_function(void *arg);

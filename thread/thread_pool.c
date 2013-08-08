@@ -91,9 +91,10 @@ int thread_pool_destroy(thread_pool_t *thread_pool)
 	thread_pool->pool_close = 1;
 	pthread_mutex_unlock(&(thread_pool->mutex));
 
-	// 唤醒线程池中正在阻塞的线程
+	// 唤醒线程池中正在阻塞的线程都退出吧
 	pthread_cond_broadcast(&(thread_pool->queue_not_empty));
-	// 唤醒添加任务的threadpool_add_job函数
+
+	// 唤醒阻塞的添加任务函数 threadpool_add_job 退出吧
 	pthread_cond_broadcast(&(thread_pool->queue_not_full));
 
 	int i;
@@ -154,27 +155,24 @@ int thread_pool_resize(thread_pool_t *thread_pool, int thread_num, int queue_max
 
 // 向线程池添加任务
 // @ return  0 表示正常
-// @ return  1 表示队列已满或所有线程忙碌
+// @ return  1 表示队列已满或所有线程忙碌(仅当非阻塞模式)
 // @ return -1 表示不可抗拒错误
-int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *), void *arg)
+int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *), void *arg, int is_block)
 {
 	pthread_mutex_lock(&(thread_pool->mutex));
-	/*
 	// 队列满的时候
 	while ((thread_pool->queue_curr_num == thread_pool->queue_max_num) && 
 		!(thread_pool->queue_close || thread_pool->pool_close)) {
-		pthread_cond_wait(&(thread_pool->queue_not_full), &(thread_pool->mutex));
-	}*/
-
-	if ((thread_pool->queue_curr_num == thread_pool->queue_max_num) && 
-		!(thread_pool->queue_close || thread_pool->pool_close)) {
-		// 不可以阻塞在这里，否则主线程会阻塞，队列满了立即返回
-		pthread_mutex_unlock(&(thread_pool->mutex));
-		return 1;
+		if (is_block == 1) {
+			pthread_cond_wait(&(thread_pool->queue_not_full), &(thread_pool->mutex));
+		} else {
+			pthread_mutex_unlock(&(thread_pool->mutex));
+			return 1;
+		}
 	}
 
 	// 所有线程都在忙的时候，不再添加任务
-	if (thread_pool->free_thread_num == 0) {
+	if (thread_pool->free_thread_num == 0 && is_block == 0) {
 		pthread_mutex_unlock(&(thread_pool->mutex));
 		return 1;
 	}
@@ -198,17 +196,20 @@ int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *)
 	if (thread_pool->head == NULL) {
 		thread_pool->head = thread_pool->tail = new_job;
 		// 告诉线程池中休眠的线程们有活干了
-		pthread_cond_broadcast(&(thread_pool->queue_not_empty));
+		// pthread_cond_broadcas 会有惊群效应
+		// pthread_cond_broadcast(&(thread_pool->queue_not_empty));
+		pthread_cond_signal(&(thread_pool->queue_not_empty));
 	} else {
 		thread_pool->tail->next = new_job;
 		thread_pool->tail = new_job;
 	}
 
-	// 刚刚调整过线程池尺寸的话，要通知新创建后沉睡的家伙们起来干活了
 	if (thread_pool->resize_now == 1) {
 		thread_pool->resize_now = 0;
-		pthread_cond_broadcast(&(thread_pool->queue_not_empty));
-	
+		// 刚刚调整过线程池尺寸的话，要通知新创建后沉睡的家伙们起来干活了
+		// pthread_cond_broadcas 会有惊群效应
+		// pthread_cond_broadcast(&(thread_pool->queue_not_empty));
+		pthread_cond_signal(&(thread_pool->queue_not_empty));
 	}
 	pthread_mutex_unlock(&(thread_pool->mutex));
 	
@@ -224,6 +225,11 @@ void *thread_function(void *arg)
 	while (true) {
 		pthread_mutex_lock(&(thread_pool->mutex));
 		while ((thread_pool->queue_curr_num == 0) && !thread_pool->pool_close) {
+#ifdef FTP_DEBUG
+			char info[100];
+			sprintf(info, "Thread %lu will be sleep and wait!", pthread_self());
+			xyftp_print_info(LOG_INFO, info);
+#endif
 			// 等待队列不再是空的消息
 			pthread_cond_wait(&(thread_pool->queue_not_empty), &(thread_pool->mutex));
 		}
@@ -244,7 +250,7 @@ void *thread_function(void *arg)
 			thread_pool->head = thread_pool->head->next;
 		}
 		
-		// 刚刚从队满转换到非空，通知任务添加函数可以工作了
+		// 刚刚从队满转换到非空，通知所有可能阻塞的任务添加函数可以工作了
 		if (thread_pool->queue_curr_num == thread_pool->queue_max_num - 1) {
 			pthread_cond_broadcast(&(thread_pool->queue_not_full));
 		}
@@ -264,7 +270,6 @@ void *thread_function(void *arg)
 		pthread_mutex_lock(&(thread_pool->mutex));
 		thread_pool->free_thread_num++;
 		pthread_mutex_unlock(&(thread_pool->mutex));
-
 	}
 }
 

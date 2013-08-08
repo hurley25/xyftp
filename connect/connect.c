@@ -68,7 +68,8 @@ bool xyftp_accept_client()
 		// 传值，注意在线程函数内部读取参数值，而非解引用
 		int tag, thread_pool_want;
 		do {
-			tag = thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd);
+			// 非阻塞模式调用线程池接口
+			tag = thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd, 0);
 			if (tag == 1) {
 				thread_pool_want = thread_pool_global->thread_num + THREAD_POOL_ADD_SIZE;
 				if (thread_pool_want <= MAX_CONNECT_USER) {

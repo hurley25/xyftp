@@ -55,7 +55,7 @@
 #define MAX_CONNECT_SIZE 1024
 
 // 服务端最大支持用户数
-#define MAX_CONNECT_USER 40
+#define MAX_CONNECT_USER 100
 
 // 默认线程池大小
 #define THREAD_POOL_SIZE 10
