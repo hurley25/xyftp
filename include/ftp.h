@@ -22,4 +22,7 @@
 // 客户处理线程的入口函数
 void *xyftp_thread_job_entry(void *arg);
 
+// 向客户端发送一条消息
+bool xyftp_send_client_msg(int conn_fd, char *msg);
+
 #endif 	// FTP_H_

@@ -125,7 +125,7 @@ bool xyftp_reset_one_buff(xyftp_buffer_t *buff)
 bool xyftp_resize_one_buff(xyftp_buffer_t *buff)
 {
 	if (buff != NULL) {
-		buff->buff = (char *)realloc(buff->size + BUFF_ADD_LENGTH);
+		buff->buff = (char *)realloc(buff->buff, buff->size + BUFF_ADD_LENGTH);
 		if (buff != NULL) {
 			buff->size += BUFF_ADD_LENGTH;
 			return true;

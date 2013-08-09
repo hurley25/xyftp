@@ -54,7 +54,7 @@ typedef struct user_env
 	int is_login_in;			// 是否已经登录
 	char user_name[USER_NAME_LEN];		// 登录的用户名
 	bool passive_on;			// 是否为被动模式
-	int connect_fd;				// 控制连接
+	int conn_fd;				// 控制连接
 	int data_fd;				// 数据连接
 }user_env_t;
 

@@ -21,17 +21,30 @@
 // 客户处理线程的入口函数
 void *xyftp_thread_job_entry(void *arg)
 { 	
-	int conn_fd = (int)arg;
-	int pipe_fd[2];
+	user_env_t user_env;
+	user_env.conn_fd = (int)arg;
 
 	xyftp_print_info(LOG_INFO, "A Job Create!");
 
-	
+	if (!xyftp_send_client_msg(user_env.conn_fd, ftp_send_msg[FTP_WELCOME])) {
+		xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+		close(user_env.conn_fd);
+		return NULL;
+	}
 
+	close(user_env.conn_fd);
 
-
-	close(conn_fd);
 	xyftp_print_info(LOG_INFO, "A Job Exit!");
 
 	return NULL;
+}
+
+// 向客户端发送一条消息
+bool xyftp_send_client_msg(int conn_fd, char *msg)
+{
+	if (rio_writen(conn_fd, msg, strlen(msg)) == -1) {
+		return false;
+	}
+
+	return true;
 }
