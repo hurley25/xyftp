@@ -91,6 +91,11 @@ bool xyftp_read_config()
 	printf("download_enable:%d\n", config_global.download_enable);
 	printf("log_enable:%d\n", config_global.log_enable);
 #endif
+	config_global.max_clients = MAX_CONNECT_USER; 			// 允许的最大客户数目与线程池上限
+	config_global.thread_pool_size = THREAD_POOL_SIZE; 		// 默认的线程池大小
+	config_global.thread_pool_add_size = THREAD_POOL_ADD_SIZE; 	// 线程池每次增加大小
+	config_global.ftp_port = SERV_PORT; 				// FTP使用的端口号
+	config_global.local_umask = 22; 				// 上传文件权限
 
 	return true;
 }

@@ -39,7 +39,7 @@ bool xyftp_accept_client()
 
 	bzero(&server_addr, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(SERV_PORT);
+	server_addr.sin_port = htons(config_global.ftp_port);
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	if (bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
@@ -71,8 +71,8 @@ bool xyftp_accept_client()
 			// 非阻塞模式调用线程池接口
 			tag = thread_pool_add_job(thread_pool_global, xyftp_thread_job_entry, (void *)accept_fd, 0);
 			if (tag == 1) {
-				thread_pool_want = thread_pool_global->thread_num + THREAD_POOL_ADD_SIZE;
-				if (thread_pool_want <= MAX_CONNECT_USER) {
+				thread_pool_want = thread_pool_global->thread_num + config_global.thread_pool_add_size;
+				if (thread_pool_want <= config_global.max_clients) {
 					if (thread_pool_resize(thread_pool_global, thread_pool_want, thread_pool_want) != 0) {
 						xyftp_print_info(LOG_ERR, "Thread Pool Resize Error!");
 						break;

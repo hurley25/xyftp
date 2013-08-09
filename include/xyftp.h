@@ -42,6 +42,7 @@
 #include "thread_pool.h"
 #include "runtime.h"
 #include "config.h"
+#include "status.h"
 #include "log.h"
 #include "ftp.h"
 
@@ -49,7 +50,11 @@
 #define SERVER_NAME "xyftp Server"
 
 // 服务器端口
-#define SERV_PORT 9527
+#ifdef FTP_DEBUG
+	#define SERV_PORT 9527
+#else
+	#define SERV_PORT 21
+#endif
 
 // 服务器最大连接数
 #define MAX_CONNECT_SIZE 1024
