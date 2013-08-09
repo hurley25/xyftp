@@ -32,12 +32,14 @@ char *ftp_send_msg[] = {
 /*  10  */	"331 Please send you password.\r\n",
 /*  11  */	"421 Failed to create data connection.\r\n",
 /*  12  */	"450 No such file or directory.\r\n",
-/*  13  */	"501 Arguments wrong, the file or directory does not exists!\r\n",
-/*  14  */	"501 Diretory or file name is too long.\r\n",
-/*  15  */	"501 Can't change directory.\r\n",
-/*  16  */	"501 Can't rename this file.\r\n",
-/*  17  */	"503 You have already logged in.\r\n",
-/*  18  */	"530 Login incorrect.\r\n",
-/*  19  */	"530 Please login with USER and PASS.\r\n",
-/*  20  */	"550 Permission denied.\r\n"
+/*  13  */	"500 Unknown command.\r\n",
+/*  14  */	"501 Arguments wrong, the file or directory does not exists!\r\n",
+/*  15  */	"501 Diretory or file name is too long.\r\n",
+/*  16  */	"501 Can't change directory.\r\n",
+/*  17  */	"501 Can't rename this file.\r\n",
+/*  18  */	"503 You have already logged in.\r\n",
+/*  19  */	"530 Login incorrect.\r\n",
+/*  20  */	"530 Please login with USER and PASS.\r\n",
+/*  21  */	"550 Permission denied.\r\n"
 };
+

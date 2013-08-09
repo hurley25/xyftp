@@ -36,14 +36,15 @@ extern char *ftp_send_msg[];
 #define   FTP_E_NO_PASS  	10  	// 331 Please send you password.
 #define   FTP_E_CONN  		11  	// 421 Failed to create data connection.
 #define   FTP_E_NO_FILE  	12  	// 450 No such file or directory.
-#define   FTP_E_ARGS_WRONG  	13  	// 501 Arguments wrong, the file or directory does not exists!
-#define   FTP_E_ARGS_LONG  	14  	// 501 Diretory or file name is too long.
-#define   FTP_E_CHG_DIR  	15  	// 501 Can't change directory.
-#define   FTP_E_RENAME  	16  	// 501 Can't rename this file.
-#define   FTP_E_NO_LOGIN  	17  	// 503 You have already logged in.
-#define   FTP_S_LOGIN		18  	// 530 Login incorrect.
-#define   FTP_E_NO_USER_PASS 	19  	// 530 Please login with USER and PASS.
-#define   FTP_E_PERMISSION  	20  	// 550 Permission denied.
+#define   FTP_E_UNKNOW_CMD 	13 	// 500 Unknown command.
+#define   FTP_E_ARGS_WRONG  	14  	// 501 Arguments wrong, the file or directory does not exists!
+#define   FTP_E_ARGS_LONG  	15  	// 501 Diretory or file name is too long.
+#define   FTP_E_CHG_DIR  	16  	// 501 Can't change directory.
+#define   FTP_E_RENAME  	17  	// 501 Can't rename this file.
+#define   FTP_E_NO_LOGIN  	18  	// 503 You have already logged in.
+#define   FTP_S_LOGIN		19  	// 530 Login incorrect.
+#define   FTP_E_NO_USER_PASS 	20  	// 530 Please login with USER and PASS.
+#define   FTP_E_PERMISSION  	21  	// 550 Permission denied.
 
 // 用户名长度
 #define USER_NAME_LEN 20

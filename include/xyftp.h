@@ -42,10 +42,11 @@
 #include "thread_pool.h"
 #include "runtime.h"
 #include "config.h"
-#include "status.h"
 #include "rio.h"
 #include "log.h"
 #include "ftp.h"
+#include "status.h"
+#include "parse_cmd.h"
 
 // 服务器名称
 #define SERVER_NAME "xyftp Server"

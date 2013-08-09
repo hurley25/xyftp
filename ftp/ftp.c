@@ -44,9 +44,9 @@ void *xyftp_thread_job_entry(void *arg)
 				client_state = state_close;
 				break;
 			}
-			client_state = state_try_login;
+			client_state = state_login;
 			break;
-		case state_try_login:
+		case state_login:
 			conn_buff->len = rio_readn(user_env.conn_fd, conn_buff->buff, conn_buff->size);
 			if (conn_buff->len <= 0) {
 				xyftp_print_info(LOG_INFO, "Read Data From Client Error!");
@@ -54,13 +54,7 @@ void *xyftp_thread_job_entry(void *arg)
 				break;
 			}
 			// 解析读取的内容
-			client_state = xyftp_parse_com(&user_env, conn_buff);
-			break;
-		case state_login:
-			client_state = state_data;
-			break;
-		case state_data:
-			client_state = state_quit;
+			client_state = xyftp_parse_cmd(&user_env, conn_buff);
 			break;
 		case state_quit:
 			if (!xyftp_send_client_msg(user_env.conn_fd, ftp_send_msg[FTP_BYE])) {
@@ -93,10 +87,3 @@ inline bool xyftp_send_client_msg(int conn_fd, char *msg)
 	return false;
 }
 
-// 解析读取到的内容
-client_state_t xyftp_parse_com(user_env_t *user_env, xyftp_buffer_t *conn_buff)
-{
-//	ftp_cmd_t recv_cmd;
-
-	return state_login;
-}

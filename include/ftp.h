@@ -22,11 +22,9 @@
 // 定义单用户连接过程中可能的各个状态
 typedef enum client_state {
 	state_conn      = 0, 	// 刚连接
-	state_try_login = 1, 	// 未验证
-	state_login     = 2, 	// 已登录成功
-	state_data      = 3, 	// 满足数据发送要求
-	state_quit      = 4, 	// 用户退出
-	state_close     = 5 	// 连接关闭
+	state_login     = 1, 	// 命令处理
+	state_quit      = 2, 	// 用户退出
+	state_close     = 3 	// 连接关闭
 }client_state_t;
 
 // FTP 命令最长也就 4 个字母
@@ -46,8 +44,5 @@ void *xyftp_thread_job_entry(void *arg);
 
 // 向客户端发送一条消息
 inline bool xyftp_send_client_msg(int conn_fd, char *msg);
-
-// 解析读取到的内容
-client_state_t xyftp_parse_com(user_env_t *user_env, xyftp_buffer_t *conn_buff);
 
 #endif 	// FTP_H_
