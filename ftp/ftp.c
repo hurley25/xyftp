@@ -26,16 +26,11 @@ void *xyftp_thread_job_entry(void *arg)
 
 	xyftp_print_info(LOG_INFO, "A Job Create!");
 
-	if (pipe(pipe_fd) == -1) {
-		xyftp_print_info(LOG_ERR, "Create Pipe Error!");
-		pthread_exit(0);
-	}
+	
 
-	splice(conn_fd, NULL, pipe_fd[1], NULL, 32768, SPLICE_F_MORE | SPLICE_F_MOVE);
-	splice(pipe_fd[0], NULL, conn_fd, NULL, 32768, SPLICE_F_MORE | SPLICE_F_MOVE);
+
 
 	close(conn_fd);
-
 	xyftp_print_info(LOG_INFO, "A Job Exit!");
 
 	return NULL;

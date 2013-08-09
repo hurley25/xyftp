@@ -43,6 +43,7 @@
 #include "runtime.h"
 #include "config.h"
 #include "status.h"
+#include "rio.h"
 #include "log.h"
 #include "ftp.h"
 
