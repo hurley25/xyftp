@@ -114,8 +114,22 @@ static bool xyftp_free_buff()
 bool xyftp_reset_one_buff(xyftp_buffer_t *buff)
 {
 	if (buff != NULL) {
-		buff->size = 0;
+		buff->len = 0;
 		return true;
+	}
+
+	return false;
+}
+
+// 增大一个数据缓冲区
+bool xyftp_resize_one_buff(xyftp_buffer_t *buff)
+{
+	if (buff != NULL) {
+		buff->buff = (char *)realloc(buff->size + BUFF_ADD_LENGTH);
+		if (buff != NULL) {
+			buff->size += BUFF_ADD_LENGTH;
+			return true;
+		}
 	}
 
 	return false;

@@ -75,5 +75,8 @@
 // 接收缓冲区默认尺寸
 #define BUFF_LENGTH 1024
 
+// 接收缓冲区增加粒度(经验值)
+#define BUFF_ADD_LENGTH 128
+
 #endif 	// XYFTP_H_
 
