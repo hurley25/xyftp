@@ -31,6 +31,9 @@ bool xyftp_init();
 // 清理服务器占据资源
 void xyftp_destroy();
 
+// 重置一个数据缓冲区
+bool xyftp_reset_one_buff(xyftp_buffer_t *buff);
+
 // 当前系统时间打印函数
 void xyftp_print_time();
 

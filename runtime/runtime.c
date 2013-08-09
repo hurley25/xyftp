@@ -110,6 +110,17 @@ static bool xyftp_free_buff()
 	return true;
 }
 
+// 重置一个数据缓冲区
+bool xyftp_reset_one_buff(xyftp_buffer_t *buff)
+{
+	if (buff != NULL) {
+		buff->size = 0;
+		return true;
+	}
+
+	return false;
+}
+
 // 当前系统时间打印函数
 void xyftp_print_time()
 {

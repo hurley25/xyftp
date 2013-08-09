@@ -80,6 +80,7 @@ bool xyftp_accept_client()
 					xyftp_print_info(LOG_INFO, "Thread Pool Resized Succeed!");
 				} else {
 					xyftp_print_info(LOG_ERR, "Too Many Client!");
+					close(accept_fd);
 					break;
 				}
 			} else if (tag == -1) {
