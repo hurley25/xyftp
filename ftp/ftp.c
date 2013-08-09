@@ -23,6 +23,11 @@ void *xyftp_thread_job_entry(void *arg)
 { 	
 	user_env_t user_env;
 	user_env.conn_fd = (int)arg;
+	user_env.is_login_in = 0;
+	user_env.passive_on = 0;
+	user_env.data_fd = 0;
+
+	xyftp_buffer_t *conn_buff = &conn_buff_global[user_env.conn_fd];
 
 #ifdef FTP_DEBUG
 	xyftp_print_info(LOG_INFO, "A Job Create!");
@@ -36,16 +41,26 @@ void *xyftp_thread_job_entry(void *arg)
 		case state_conn:
 			if (!xyftp_send_client_msg(user_env.conn_fd, ftp_send_msg[FTP_WELCOME])) {
 				xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
-				return NULL;
+				client_state = state_close;
+				break;
 			}
 			client_state = state_try_login;
 			break;
 		case state_try_login:
-			client_state = state_quit;
+			conn_buff->len = rio_readn(user_env.conn_fd, conn_buff->buff, conn_buff->size);
+			if (conn_buff->len <= 0) {
+				xyftp_print_info(LOG_INFO, "Read Data From Client Error!");
+				client_state = state_close;
+				break;
+			}
+			// 解析读取的内容
+			client_state = xyftp_parse_com(&user_env, conn_buff);
 			break;
 		case state_login:
+			client_state = state_data;
 			break;
 		case state_data:
+			client_state = state_quit;
 			break;
 		case state_quit:
 			if (!xyftp_send_client_msg(user_env.conn_fd, ftp_send_msg[FTP_BYE])) {
@@ -69,11 +84,19 @@ void *xyftp_thread_job_entry(void *arg)
 }
 
 // 向客户端发送一条消息
-bool xyftp_send_client_msg(int conn_fd, char *msg)
+inline bool xyftp_send_client_msg(int conn_fd, char *msg)
 {
-	if (rio_writen(conn_fd, msg, strlen(msg)) == -1) {
-		return false;
+	if (rio_writen(conn_fd, msg, strlen(msg)) > 0) {
+		return true;
 	}
 
-	return true;
+	return false;
+}
+
+// 解析读取到的内容
+client_state_t xyftp_parse_com(user_env_t *user_env, xyftp_buffer_t *conn_buff)
+{
+//	ftp_cmd_t recv_cmd;
+
+	return state_login;
 }

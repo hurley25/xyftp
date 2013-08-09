@@ -27,6 +27,9 @@ void xyftp_print_info(int level, char *output_info)
 	char err_buff[ERR_BUFF];
 
 #ifndef FTP_DEBUG
+	if (level == LOG_DEBUG) {
+		return;
+	}
 	if (errno == 0) {
 		syslog(level, "%s\n", output_info);
 	} else {

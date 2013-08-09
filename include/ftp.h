@@ -19,7 +19,6 @@
 #ifndef FTP_H_
 #define FTP_H_
 
-// 主状态机
 // 定义单用户连接过程中可能的各个状态
 typedef enum client_state {
 	state_conn      = 0, 	// 刚连接
@@ -30,18 +29,25 @@ typedef enum client_state {
 	state_close     = 5 	// 连接关闭
 }client_state_t;
 
-// 从状态机
-// 定义协议读取、解析状态机的各个状态
-typedef enum proto_check_state {
-	state_line_ok    = 0, 	// 行正确识别
-	state_line_error = 1, 	// 行出错
-	state_line_open  = 2 	// 行不完整
-}proto_check_state_t;
+// FTP 命令最长也就 4 个字母
+#define MAX_CMD 5
+
+// 最长的参数是路径
+#define MAX_ARG MAX_PATH
+
+// 定义FTP命令结构体
+typedef struct ftp_cmd{
+	char	cmd[MAX_CMD];
+	char	arg[MAX_ARG];
+}ftp_cmd_t;
 
 // 客户处理线程的入口函数
 void *xyftp_thread_job_entry(void *arg);
 
 // 向客户端发送一条消息
-bool xyftp_send_client_msg(int conn_fd, char *msg);
+inline bool xyftp_send_client_msg(int conn_fd, char *msg);
+
+// 解析读取到的内容
+client_state_t xyftp_parse_com(user_env_t *user_env, xyftp_buffer_t *conn_buff);
 
 #endif 	// FTP_H_
