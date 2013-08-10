@@ -124,6 +124,8 @@ int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff)
 		} else if (conn_buff->buff[4] == '\r' || conn_buff->buff[4] == '\n') {
 			blank_index = 4;
 			has_arg = false;
+		} else {
+			return -1;
 		}
 	}
 

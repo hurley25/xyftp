@@ -37,6 +37,12 @@ bool xyftp_reset_one_buff(xyftp_buffer_t *buff);
 // 增大一个数据缓冲区
 bool xyftp_resize_one_buff(xyftp_buffer_t *buff);
 
+// 判断当前执行用户是否为 root
+bool xyftp_is_root();
+
+// 修改根目录为用户配置，且转换到一般用户去执行
+bool xyftp_chroot();
+
 // 当前系统时间打印函数
 void xyftp_print_time();
 
