@@ -86,7 +86,7 @@ int do_pass(user_env_t *user_env, ftp_cmd_t *cmd)
 
 int do_quit(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return -1;
 }
 
 int do_rein(user_env_t *user_env, ftp_cmd_t *cmd)
