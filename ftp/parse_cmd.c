@@ -150,6 +150,11 @@ int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff)
 #ifdef FTP_DEBUG
 	printf("Debug Info : A Client Send A Command. cmd : %s  arg : %s\n", recv_cmd->cmd, recv_cmd->arg);
 #endif
+	// 命令字母转换到大写
+	int i;
+	for (i = 0; i < MAX_CMD; i++) {
+		recv_cmd->cmd[i] &= 0x5F;
+	}
 
 	// 比较参数并返回索引
 	int index;
