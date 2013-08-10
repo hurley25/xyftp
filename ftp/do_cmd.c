@@ -18,7 +18,8 @@
 
 #include "xyftp.h"
 
-// 各个命令的解析函数，从函数名称就能看出来用途，不解释
+// 各个命令的解析函数
+// 用户验证
 int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	xyftp_buffer_t *conn_buff = &conn_buff_global[user_env->conn_fd];
@@ -72,6 +73,7 @@ int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 	return 0;
 }
 
+// 验证密码(程序内部不会显示调用)
 int do_pass(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	if (user_env->is_login_in == true) {
@@ -89,76 +91,92 @@ int do_pass(user_env_t *user_env, ftp_cmd_t *cmd)
 	return 0;
 }
 
+// 用户退出
 int do_quit(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	return -1;
 }
 
+// 重新登录
 int do_rein(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	user_env->is_login_in = 0;
+	return 1;
 }
 
+// 修改当前目录
 int do_cwd(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 返回上级目录
 int do_cdup(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 指定要改名的原文件
 int do_rnfr(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 指定要改名的新文件
 int do_rnto(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 中断上一个命令
 int do_abor(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 删除指定文件
 int do_dele(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 删除指定目录
 int do_rmd(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 创建指定目录
 int do_mkd(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 显示当前目录
 int do_pwd(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	return 0;
 }
 
+// 列出当前目录和子目录
 int do_list(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 列出当前目录和子目录的名字
 int do_nlst(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 不支持该方式，仅支持 PASV
 int do_port(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 设置数据交换的类型 {A(SCII),E(BCDIC),I(mage),L(ocal byte size)}
 int do_type(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	return 0;
@@ -169,29 +187,34 @@ int do_pasv(user_env_t *user_env, ftp_cmd_t *cmd)
 	return 0;
 }
 
+// 下载
 int do_retr(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	return 0;
 }
 
+// 覆盖式上传
 int do_stor(user_env_t *user_env, ftp_cmd_t *cmd)
 {
 	return 0;
 }
 
+// 追加式上传(不准备支持)
 int do_appe(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 显示帮助(不准备实现)
 int do_help(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 2;
 }
 
+// 服务器反馈收到即可
 int do_noop(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	return 0;
+	return 1;
 }
 
 // 命令解析函数指针的数组

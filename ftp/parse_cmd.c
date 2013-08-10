@@ -91,6 +91,12 @@ client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff)
 				xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
 				return state_close;
 			}
+		// 权限不允许
+		} else if (cmd_state == 2) {
+			if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_E_PERMISSION])) {
+				xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+				return state_close;
+			}
 		}
 		// 指令出错在指令处理函数里发送错误
 		// 函数返回 0 则不处理
