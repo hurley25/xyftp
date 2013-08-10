@@ -30,6 +30,11 @@ int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
 		}
 		return -1;
+	} else if (user_env->is_login_in == true) {
+		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_S_ANONYMOUS])) {
+			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+			return -1;
+		}
 	} else if (strcmp(cmd->arg, "anonymous") == 0) {
 		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_NEED_PASS])) {
 			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
@@ -64,7 +69,18 @@ int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 
 int do_pass(user_env_t *user_env, ftp_cmd_t *cmd)
 {
-	// 该命令被调用时直接报错
+	if (user_env->is_login_in == true) {
+		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_S_ANONYMOUS])) {
+			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+			return -1;
+		}
+	} else {
+		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_E_NO_USER_PASS])) {
+			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+			return -1;
+		}
+	}
+
 	return 0;
 }
 
