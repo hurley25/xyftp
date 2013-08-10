@@ -67,7 +67,7 @@ client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff)
 	int cmd_index = xyftp_anaylse_buff(&recv_cmd, conn_buff);
 
 	// 未登录的时候拒绝一切非登录指令
-	if (cmd_index != 1 && user_env->is_login_in == false) {
+	if (cmd_index != 0 && user_env->is_login_in == false) {
 		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_E_NO_USER_PASS])) {
 			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
 			return state_close;
@@ -104,8 +104,44 @@ client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff)
 // 从缓冲区中解析出命令
 static int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff)
 {
-	// TODO 解析出命令和参数
+	// 命令行中空格的位置
+	int blank_index = 0;
+
+	// 最短的命令 + '\n' 也有 4 字节
+	if (conn_buff->len < 4) {
+		return -1;
+	}
+
+	// 格式不正确不考虑粘包处理,直接反馈无法识别
+	// 命令 3-4 个字节
+	if (conn_buff->buff[3] == ' ') {
+		blank_index = 3;
+	} else if (conn_buff->buff[4] == ' ') {
+		blank_index = 4;
+	} else {
+		return -1;
+	}
+
+	// 拷贝命令
+	strncpy(recv_cmd->cmd, conn_buff->buff, blank_index);
+	recv_cmd->cmd[blank_index] = '\0';
 	
+	// 拷贝参数，按照惯例支持 \r\n 和 \n
+	if (conn_buff->buff[conn_buff->len-2] == '\r' && conn_buff->buff[conn_buff->len-1] == '\n') {
+		strncpy(recv_cmd->arg, conn_buff->buff+blank_index+1, conn_buff->len-blank_index-1);
+		recv_cmd->arg[conn_buff->len-blank_index-1] = '\0';
+	} else if (conn_buff->buff[conn_buff->len-1] == '\n') {
+		strncpy(recv_cmd->arg, conn_buff->buff+blank_index+1, conn_buff->len-blank_index-2);
+		recv_cmd->arg[conn_buff->len-blank_index-1] = '\0';
+	} else {
+		// 命令没读取完，此时最好应该判断是否断包
+		return -1;
+	}
+
+#ifdef FTP_DEBUG
+	printf("Debug Info : A Client Send A Command. cmd : %s  arg : %s\n", recv_cmd->cmd, recv_cmd->arg);
+#endif
+
 	// 比较参数并返回索引
 	int index;
 	for (index = 0; index < MAX_FTP_COMMAND; index++) {

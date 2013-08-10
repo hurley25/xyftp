@@ -19,8 +19,9 @@
 #include "xyftp.h"
 
 // 各个命令的解析函数，从函数名称就能看出来用途，不解释
-int do_user(user_env_t *uner_env, ftp_cmd_t *cmd)
+int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 {
+	printf("USER %s want to login!\n", cmd->arg);
 	return 0;
 }
 
