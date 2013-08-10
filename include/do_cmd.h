@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  parse_cmd.h
+ *       Filename:  do_cmd.h
  *
- *    Description:  解析 PDF 命令行
+ *    Description:  命令解析处理
  *
  *        Version:  1.0
- *        Created:  2013年08月09日 23时27分12秒
+ *        Created:  2013年08月10日 10时29分14秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,13 +16,13 @@
  * =====================================================================================
  */
 
-#ifndef PARSE_CMD_H_
-#define PARSE_CMD_H_
+#ifndef DO_CMD_H_
+#define DO_CMD_H_
 
-// 最多计划支持 23 个命令
-#define MAX_FTP_COMMAND 23
+// 命令处理的函数指针
+typedef int (*p_do_cmd_func)(user_env_t *, ftp_cmd_t *);
 
-// 解析读取到的内容
-client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff);
+// 命令解析函数指针的数组
+extern p_do_cmd_func do_cmd_func[];
 
-#endif 	// PARSE_CMD_H_
+#endif 	// DO_CMD_H_

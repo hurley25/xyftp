@@ -47,6 +47,7 @@
 #include "ftp.h"
 #include "status.h"
 #include "parse_cmd.h"
+#include "do_cmd.h"
 
 // 服务器名称
 #define SERVER_NAME "xyftp Server"
