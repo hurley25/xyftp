@@ -22,7 +22,7 @@ char *ftp_send_msg[] = {
 /*   0  */	"150 File status okay; about to open data connection.\r\n",
 /*   1  */	"200 Succeed to create data connection.\r\n",
 /*   2  */	"200 Welcome to xyftp server.\r\n",
-/*   3  */	"220 No username input.\r\n",
+/*   3  */	"220 Only one user is anonymous.\r\n",
 /*   4  */	"221 Goodbye.\r\n",
 /*   5  */	"230 User anonymous logged in.\r\n",
 /*   6  */	"250 RMD command successful.\r\n",

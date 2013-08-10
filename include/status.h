@@ -26,7 +26,7 @@ extern char *ftp_send_msg[];
 #define   FTP_S_FSO       	 0  	// 150 File status okay; about to open data connection.
 #define   FTP_S_CONN      	 1  	// 200 Succeed to create data connection.
 #define   FTP_WELCOME     	 2  	// 200 Welcome to xyftp server.
-#define   FTP_E_NO_USER   	 3  	// 220 No username input.
+#define   FTP_E_OTHER_USER   	 3  	// 220 Only one user is anonymous.
 #define   FTP_BYE   	 	 4  	// 221 Goodbye.
 #define   FTP_S_ANONYMOUS   	 5  	// 230 User anonymous logged in.
 #define   FTP_S_RMD   		 6  	// 250 RMD command successful.

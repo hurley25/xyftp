@@ -33,21 +33,15 @@ static bool xyftp_free_buff();
 // 初始化运行状态
 bool xyftp_init()
 { 	
-	// 一些环境设置需要以 root 权限运行
-	if (!xyftp_is_root()) {
-		xyftp_print_info(LOG_ERR, "Please Run Program With Root!");
-		return false;
-	}
-
 	// 读取配置文件
 	if (!xyftp_read_config()) {
 		xyftp_print_info(LOG_ERR, "Read Config File Error!");
 		return false;
 	}
 
-	// 修改根目录为用户配置，且转换到一般用户去执行
-	if (!xyftp_chroot()) {
-		xyftp_print_info(LOG_ERR, "Chroot Error!");
+	// 设置当前工作目录
+	if (!xyftp_chdir()) {
+		xyftp_print_info(LOG_ERR, "Change DIR Error!");
 		return false;
 	}
 
@@ -147,29 +141,10 @@ bool xyftp_resize_one_buff(xyftp_buffer_t *buff)
 	return false;
 }
 
-// 判断当前执行用户是否为 root
-bool xyftp_is_root()
-{
-	if (geteuid() == 0) {
-		return true;
-	}
-
-	return false;
-}
-
-// 修改根目录为用户配置，且转换到一般用户去执行
-bool xyftp_chroot()
+// 修改程序当前工作目录为设置的目录
+bool xyftp_chdir()
 {
 	if (chdir(config_global.ftp_path) == -1) {
-		return false;
-	}
-
-	if (chroot(".") == -1) {
-		return false;
-	}
-
-	// 转换到本机一般用户执行，实际上应该创建服务器自己的专属用户
-	if (setuid(1000) == -1 || seteuid(1000) == -1) {
 		return false;
 	}
 

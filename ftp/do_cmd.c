@@ -62,6 +62,11 @@ int do_user(user_env_t *user_env, ftp_cmd_t *cmd)
 				return -1;
 			}
 		}
+	} else {
+		if (!xyftp_send_client_msg(user_env->conn_fd, ftp_send_msg[FTP_E_OTHER_USER])) {
+			xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
+			return -1;
+		}
 	}
 
 	return 0;
