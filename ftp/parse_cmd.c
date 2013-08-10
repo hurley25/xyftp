@@ -57,9 +57,6 @@ static char *ftp_command[] = {
 /*   32   */		"STAT" 		// 在当前程序或目录上返回信息
 };
 
-// 从缓冲区中解析出命令
-static int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff);
-
 // 解析读取到的内容
 client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff)
 {
@@ -96,13 +93,14 @@ client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff)
 			}
 		}
 		// 指令出错在指令处理函数里发送错误
+		// 函数返回 0 则不处理
 	}
 
 	return state_login;
 }
 
 // 从缓冲区中解析出命令
-static int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff)
+int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff)
 {
 	// 命令行中空格的位置
 	int blank_index = 0;

@@ -33,7 +33,7 @@ extern char *ftp_send_msg[];
 #define   FTP_S_COMMAND 	 7  	// 250 Command succeed.
 #define   FTP_S_FILE_DEL   	 8  	// 250 File sucessfully deleted.
 #define   FTP_S_CREAT_DIR   	 9  	// 257 Directory successfully created:
-#define   FTP_E_NO_PASS  	10  	// 331 Please send you password.
+#define   FTP_NEED_PASS  	10  	// 331 Please specify the password.
 #define   FTP_E_CONN  		11  	// 421 Failed to create data connection.
 #define   FTP_E_NO_FILE  	12  	// 450 No such file or directory.
 #define   FTP_E_UNKNOW_CMD 	13 	// 500 Unknown command.
@@ -42,7 +42,7 @@ extern char *ftp_send_msg[];
 #define   FTP_E_CHG_DIR  	16  	// 501 Can't change directory.
 #define   FTP_E_RENAME  	17  	// 501 Can't rename this file.
 #define   FTP_E_NO_LOGIN  	18  	// 503 You have already logged in.
-#define   FTP_S_LOGIN		19  	// 530 Login incorrect.
+#define   FTP_E_LOGIN		19  	// 530 Login incorrect.
 #define   FTP_E_NO_USER_PASS 	20  	// 530 Please login with USER and PASS.
 #define   FTP_E_PERMISSION  	21  	// 550 Permission denied.
 

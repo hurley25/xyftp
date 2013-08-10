@@ -25,4 +25,7 @@
 // 解析读取到的内容
 client_state_t xyftp_parse_cmd(user_env_t *user_env, xyftp_buffer_t *conn_buff);
 
+// 从缓冲区中解析出命令
+int xyftp_anaylse_buff(ftp_cmd_t *recv_cmd, xyftp_buffer_t *conn_buff);
+
 #endif 	// PARSE_CMD_H_

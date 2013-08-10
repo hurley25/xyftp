@@ -47,6 +47,8 @@ void *xyftp_thread_job_entry(void *arg)
 			client_state = state_login;
 			break;
 		case state_login:
+			assert(conn_buff->len >= 0 && conn_buff->len < conn_buff->size);
+			bzero(conn_buff->buff, conn_buff->len);
 			// 此处读一次即可
 			conn_buff->len = read(user_env.conn_fd, conn_buff->buff, conn_buff->size);
 			if (conn_buff->len <= 0) {
@@ -69,6 +71,13 @@ void *xyftp_thread_job_entry(void *arg)
 		}
 	}
 
+	// 关闭前一定重置缓冲区
+	xyftp_reset_one_buff(conn_buff);
+
+	// 插入内存屏障，严格控制时序
+	_barrier();
+	
+	// 所有的套接字关闭全部由状态机轮转到此处
 	close(user_env.conn_fd);
 
 #ifdef FTP_DEBUG

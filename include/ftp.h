@@ -45,4 +45,17 @@ void *xyftp_thread_job_entry(void *arg);
 // 向客户端发送一条消息
 inline bool xyftp_send_client_msg(int conn_fd, char *msg);
 
+// 内存屏障
+#if __GNUC__ < 4
+static inline void _barrier(void)
+{ 
+	__asm__ volatile("":::"memory"); 
+}
+#else
+static inline void _barrier(void) 
+{ 
+	__sync_synchronize(); 
+}
+#endif
+
 #endif 	// FTP_H_

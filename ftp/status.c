@@ -29,7 +29,7 @@ char *ftp_send_msg[] = {
 /*   7  */	"250 Command succeed.\r\n",
 /*   8  */	"250 File sucessfully deleted.\r\n",
 /*   9  */	"257 Directory successfully created:\r\n",
-/*  10  */	"331 Please send you password.\r\n",
+/*  10  */	"331 PPlease specify the password.\r\n",
 /*  11  */	"421 Failed to create data connection.\r\n",
 /*  12  */	"450 No such file or directory.\r\n",
 /*  13  */	"500 Unknown command.\r\n",
