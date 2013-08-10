@@ -41,13 +41,14 @@ void *xyftp_thread_job_entry(void *arg)
 		case state_conn:
 			if (!xyftp_send_client_msg(user_env.conn_fd, ftp_send_msg[FTP_WELCOME])) {
 				xyftp_print_info(LOG_INFO, "Write Data To Client Error!");
-				client_state = state_close;
+			 	client_state = state_close;
 				break;
 			}
 			client_state = state_login;
 			break;
 		case state_login:
-			conn_buff->len = rio_readn(user_env.conn_fd, conn_buff->buff, conn_buff->size);
+			// 此处读一次即可
+			conn_buff->len = read(user_env.conn_fd, conn_buff->buff, conn_buff->size);
 			if (conn_buff->len <= 0) {
 				xyftp_print_info(LOG_INFO, "Read Data From Client Error!");
 				client_state = state_close;

@@ -25,7 +25,7 @@ size_t rio_readn(int fd, void *usrbuf, size_t n)
 	char   *bufp = usrbuf;
 
 	while (nleft > 0) {
-		if ((nread = read(fd, bufp, nleft)) < 0) {
+		if ((nread = read(fd, bufp, nleft)) == -1) {
 			if (errno == EINTR) { 	// Interrupted by sig handler return
 				nread = 0; 	// and call read() again
 			} else {

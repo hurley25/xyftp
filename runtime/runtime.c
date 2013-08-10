@@ -86,8 +86,8 @@ static bool xyftp_malloc_buff()
 	int i;
 	for (i = 0; i < MAX_CONNECT_SIZE; i++) {
 		conn_buff_global[i].buff = (char *)malloc(BUFF_LENGTH);
+		conn_buff_global[i].size = BUFF_LENGTH;
 		conn_buff_global[i].len = 0;
-		conn_buff_global[i].size = 0;
 		if (conn_buff_global[i].buff == NULL) {
 			return false;
 		}

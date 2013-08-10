@@ -73,10 +73,10 @@
 // listen() 的 backlog 队列长度
 #define LISTEN_SIZE 20
 
-// 接收缓冲区默认尺寸
-#define BUFF_LENGTH 1024
+// 套接字缓冲区默认尺寸
+#define BUFF_LENGTH 4096
 
-// 接收缓冲区增加粒度(经验值)
+// 套接字缓冲区增加粒度(经验值)
 #define BUFF_ADD_LENGTH 128
 
 #endif 	// XYFTP_H_
