@@ -19,10 +19,12 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#ifndef __cplusplus
 typedef enum _bool {
 	false = 0,
 	true = 1
 }bool;
+#endif
 
 // 定义服务器数据缓冲区类型
 typedef struct  xyftp_buffer {

@@ -19,7 +19,9 @@
 #ifndef XYFTP_H_
 #define XYFTP_H_
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #include <unistd.h>
 #include <sys/types.h>
