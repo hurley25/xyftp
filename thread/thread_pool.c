@@ -198,7 +198,6 @@ int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *)
 		// 告诉线程池中休眠的线程们有活干了
 		// pthread_cond_broadcas 会有惊群效应
 		// pthread_cond_broadcast(&(thread_pool->queue_not_empty));
-		pthread_cond_signal(&(thread_pool->queue_not_empty));
 	} else {
 		thread_pool->tail->next = new_job;
 		thread_pool->tail = new_job;
@@ -209,8 +208,11 @@ int thread_pool_add_job(thread_pool_t *thread_pool, void *(job_callback)(void *)
 		// 刚刚调整过线程池尺寸的话，要通知新创建后沉睡的家伙们起来干活了
 		// pthread_cond_broadcas 会有惊群效应
 		// pthread_cond_broadcast(&(thread_pool->queue_not_empty));
-		pthread_cond_signal(&(thread_pool->queue_not_empty));
 	}
+	
+	// 想了想，还是每一次添加都发出一个信号比较合适
+	pthread_cond_signal(&(thread_pool->queue_not_empty));
+
 	pthread_mutex_unlock(&(thread_pool->mutex));
 	
 	return 0;
